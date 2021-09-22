@@ -13,6 +13,7 @@ exports.formAuth = (body, opt) => {
             .length(11)
             .pattern(/^[0-9]+$/)
             .required()
+        validator.address = Joi.string().min(5).required()
     }
 
     return validCheck(body, validator)

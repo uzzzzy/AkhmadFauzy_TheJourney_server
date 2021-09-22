@@ -23,6 +23,9 @@ module.exports = {
             address: {
                 type: Sequelize.TEXT,
             },
+            image: {
+                type: Sequelize.STRING,
+            },
             status: {
                 type: Sequelize.STRING,
                 defaultValue: 'user',
