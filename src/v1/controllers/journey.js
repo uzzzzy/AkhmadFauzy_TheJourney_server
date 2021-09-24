@@ -1,17 +1,19 @@
+const { Op } = require('sequelize')
+
 const { models, success, failed } = require('../functions/')
 
-const { journey: table } = models
+const { journey: table, user } = models
 
 exports.getJourneys = async (req, res) => {
     try {
         // Get Passed Query
-        const { userId, order, limit, offset, type } = req.query
+        const { userId, order, limit, offset, type, search } = req.query
 
         // Init Query
         let query = {
             distinct: true,
             attributes: {
-                exclude: ['userId', 'createdAt', 'updatedAt'],
+                exclude: ['updatedAt'],
             },
         }
 
@@ -27,6 +29,15 @@ exports.getJourneys = async (req, res) => {
                 ...where,
                 userId,
             }
+        if (search)
+            where = {
+                [Op.or]: [
+                    { title: { [Op.like]: '%' + search + '%' } },
+                    {
+                        description: { [Op.like]: '%' + search + '%' },
+                    },
+                ],
+            }
 
         query = { ...query, where }
 
@@ -37,7 +48,7 @@ exports.getJourneys = async (req, res) => {
             const { count, rows } = await table.findAndCountAll(query)
             return success(res, {
                 count: count,
-                products: rows,
+                journeys: rows,
             })
         }
     } catch (error) {
@@ -51,7 +62,11 @@ exports.getJourney = async (req, res) => {
     let query = {
         distinct: true,
         attributes: {
-            exclude: ['createdAt', 'updatedAt'],
+            exclude: ['updatedAt'],
+        },
+        include: {
+            model: user,
+            attributes: ['fullName'],
         },
     }
 
@@ -59,6 +74,21 @@ exports.getJourney = async (req, res) => {
         const journey = await table.findByPk(id, query)
 
         return success(res, journey)
+    } catch (error) {
+        return failed(res)
+    }
+}
+
+exports.addJourney = async (req, res) => {
+    try {
+        const data = req.body
+        data.userId = req.user.id
+
+        const result = await table.create(data)
+        return res.send({
+            message: 'success',
+            result,
+        })
     } catch (error) {
         return failed(res)
     }

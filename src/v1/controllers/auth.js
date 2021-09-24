@@ -91,12 +91,26 @@ exports.register = async (req, res) => {
 
 exports.verifyToken = async (req, res) => {
     try {
-        const result = await table.findByPk(req.user.id, {
-            attributes: ['email', 'fullName', 'image', 'status'],
-        })
+        let result = {}
 
-        // if (result.status === 'customer') result.image = result.image ? 'http://localhost:5000/uploads/users/' + result.image : 'http://localhost:5000/uploads/profile.jpg'
-        // else result.image = 'http://localhost:5000/uploads/admin.jpg'
+        await table
+            .findByPk(req.user.id, {
+                attributes: ['email', 'fullName', 'image', 'status', 'address'],
+            })
+            .then((res) => {
+                let temp = res
+
+                temp = { ...temp, image: 'https://www.pixsy.com/wp-content/uploads/2021/04/edi-libedinsky-1bhp9zBPHVE-unsplash-1-1024x683.jpeg' }
+
+                result = {
+                    email: res.email,
+                    fullName: res.fullName,
+                    image: 'https://www.pixsy.com/wp-content/uploads/2021/04/edi-libedinsky-1bhp9zBPHVE-unsplash-1-1024x683.jpeg',
+                    status: res.status,
+                    address: res.address,
+                }
+            })
+        // else result.image = 'https://www.pixsy.com/wp-content/uploads/2021/04/edi-libedinsky-1bhp9zBPHVE-unsplash-1-1024x683.jpeg'
 
         res.send({
             status: 'succes',
