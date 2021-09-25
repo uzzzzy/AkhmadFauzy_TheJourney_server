@@ -9,7 +9,7 @@ const router = express.Router()
 router.get('/', (req, res) => res.sendFile(path.join(path.dirname(__dirname), '/html/index.html')))
 
 const { login, register, verifyToken } = require('../controllers/auth')
-const { images, deleteImage } = require('../controllers/image')
+const { addImage, deleteImage, getImages } = require('../controllers/image')
 const { getJourneys, getJourney, addJourney } = require('../controllers/journey')
 
 const { auth } = require('../middlewares/auth')
@@ -28,7 +28,8 @@ router.post('/journey', auth, addJourney)
 // Route Bookmark
 
 //
-router.post('/image', uploadFile('image'), images)
-router.delete('/image', deleteImage)
+router.get('/images', auth, getImages)
+router.post('/image', auth, uploadFile('image'), addImage)
+router.delete('/image', auth, deleteImage)
 
 module.exports = router

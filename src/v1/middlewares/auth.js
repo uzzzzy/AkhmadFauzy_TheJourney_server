@@ -8,7 +8,7 @@ const verify = (req, res, next, roleOpt) => {
     const authHeader = req.header('Authorization')
     if (!authHeader) return res.status(401).send({ status: 'failed', message: 'No Token' })
     const token = authHeader.split(' ')[1]
-    const role = roleOpt ? roleOpt : 'customer'
+    const role = roleOpt ? roleOpt : 'user'
 
     if (!token) {
         return res.status(401).send({

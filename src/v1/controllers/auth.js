@@ -1,4 +1,4 @@
-const { models, success, failed, formAuth } = require('../functions/')
+const { models, success, failed, formAuth, handleImage } = require('../functions/')
 
 const { user: table } = models
 
@@ -67,6 +67,7 @@ exports.register = async (req, res) => {
             password: hashedPassword,
             phone: req.body.phone,
             status: 'user',
+            address: req.body.address,
         })
 
         const token = jwt.sign(
@@ -95,20 +96,15 @@ exports.verifyToken = async (req, res) => {
 
         await table
             .findByPk(req.user.id, {
-                attributes: ['email', 'fullName', 'image', 'status', 'address'],
+                attributes: {
+                    exclude: ['password', 'createdAt', 'updatedAt'],
+                },
             })
             .then((res) => {
                 let temp = res
+                temp.image = res.image ? handleImage(res.image, 'users') : 'https://www.pixsy.com/wp-content/uploads/2021/04/edi-libedinsky-1bhp9zBPHVE-unsplash-1-1024x683.jpeg'
 
-                temp = { ...temp, image: 'https://www.pixsy.com/wp-content/uploads/2021/04/edi-libedinsky-1bhp9zBPHVE-unsplash-1-1024x683.jpeg' }
-
-                result = {
-                    email: res.email,
-                    fullName: res.fullName,
-                    image: 'https://www.pixsy.com/wp-content/uploads/2021/04/edi-libedinsky-1bhp9zBPHVE-unsplash-1-1024x683.jpeg',
-                    status: res.status,
-                    address: res.address,
-                }
+                result = temp
             })
         // else result.image = 'https://www.pixsy.com/wp-content/uploads/2021/04/edi-libedinsky-1bhp9zBPHVE-unsplash-1-1024x683.jpeg'
 

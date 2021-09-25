@@ -27,6 +27,12 @@ const validCheck = (body, validator) => {
     return error ? error : null
 }
 
+// Handle image path
+
+exports.handleImage = (image, path) => {
+    return process.env.UPLOAD + `/${path}/` + image
+}
+
 // Response To Client
 
 exports.failed = (res, message, status) => {

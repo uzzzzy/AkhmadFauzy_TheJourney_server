@@ -8,7 +8,7 @@ exports.getJourneys = async (req, res) => {
     try {
         // Get Passed Query
         const { userId, order, limit, offset, type, search } = req.query
-
+        console.log(req.header('Authorization'))
         // Init Query
         let query = {
             distinct: true,
@@ -72,6 +72,18 @@ exports.getJourney = async (req, res) => {
 
     try {
         const journey = await table.findByPk(id, query)
+
+        await table.update(
+            {
+                seen: journey.seen + 1,
+            },
+            {
+                where: {
+                    id: journey.id,
+                },
+            }
+        )
+        console.log(journey.seen)
 
         return success(res, journey)
     } catch (error) {

@@ -1,4 +1,8 @@
 node_modules
 html
+
 /uploads/images/*
 !/uploads/images/*.txt
+
+/uploads/users/*
+!/uploads/users/*.txt
