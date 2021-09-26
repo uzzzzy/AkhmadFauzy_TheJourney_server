@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
             journey.belongsTo(models.user, {
                 foreignKey: 'userId',
             })
+
+            journey.hasMany(models.bookmark, {
+                foreignKey: 'journeyId',
+            })
         }
     }
     journey.init(

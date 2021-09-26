@@ -17,7 +17,6 @@ exports.getImages = async (req, res) => {
             res.forEach((item) =>
                 result.push({
                     url: handleImage(item.imageName, 'images'),
-                    thumb: handleImage(item.imageName, 'images'),
                 })
             )
         })

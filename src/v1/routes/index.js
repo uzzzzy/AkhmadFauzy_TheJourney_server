@@ -9,6 +9,7 @@ const router = express.Router()
 router.get('/', (req, res) => res.sendFile(path.join(path.dirname(__dirname), '/html/index.html')))
 
 const { login, register, verifyToken } = require('../controllers/auth')
+const { addBookmark, deleteBookmark } = require('../controllers/bookmark')
 const { addImage, deleteImage, getImages } = require('../controllers/image')
 const { getJourneys, getJourney, addJourney } = require('../controllers/journey')
 
@@ -26,6 +27,8 @@ router.get('/journey/:id', getJourney)
 router.post('/journey', auth, addJourney)
 
 // Route Bookmark
+router.post('/bookmark', auth, addBookmark)
+router.delete('/bookmark/:id', auth, deleteBookmark)
 
 //
 router.get('/images', auth, getImages)
