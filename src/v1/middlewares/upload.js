@@ -29,7 +29,6 @@ const filterFn = async (req, file, cb, imageFile) => {
 }
 
 const resData = (req, res, next, upload, opt) => {
-    console.log(req, req.files)
     upload(req, res, function (err) {
         if (req.fileValidationError) {
             return res.status(400).send(req.fileValidationError)

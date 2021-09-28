@@ -34,6 +34,7 @@ exports.addImage = async (req, res) => {
 }
 
 exports.deleteImage = async (req, res) => {
+    console.log(req)
     try {
         const uri = req.body.src.split('/')
 

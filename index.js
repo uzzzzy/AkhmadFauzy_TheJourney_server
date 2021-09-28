@@ -12,15 +12,11 @@ const router = require(`./src/v${apiVersion}/routes`)
 const cors = require('cors')
 
 // run
-app.use(
-    express.urlencoded({
-        extended: true,
-    })
-)
+app.use(cors())
+
+app.use(express.urlencoded({ extended: true }))
 
 app.use(express.json())
-
-app.use(cors())
 
 app.use(`/api/v${apiVersion}`, router)
 
