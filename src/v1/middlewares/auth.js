@@ -26,7 +26,6 @@ const verify = (req, res, next, roleOpt) => {
             res.status(401).send({ message: 'Access Denied' })
         }
     } catch (error) {
-        console.log(error)
         res.status(400).send({ message: 'Invalid Token' })
     }
 }

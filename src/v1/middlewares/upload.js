@@ -14,7 +14,7 @@ const storageFun = multer.diskStorage({
     },
 })
 
-const filterFn = (req, file, cb, imageFile) => {
+const filterFn = async (req, file, cb, imageFile) => {
     if (file.fieldname === imageFile) {
         if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
             req.fileValidationError = {
@@ -24,10 +24,12 @@ const filterFn = (req, file, cb, imageFile) => {
             return cb(new Error('Only image files are accepted'), false)
         }
     }
+
     cb(null, true)
 }
 
 const resData = (req, res, next, upload, opt) => {
+    console.log(req, req.files)
     upload(req, res, function (err) {
         if (req.fileValidationError) {
             return res.status(400).send(req.fileValidationError)
@@ -57,7 +59,9 @@ const resData = (req, res, next, upload, opt) => {
 
 exports.uploadFile = (imageFile) => {
     const storage = storageFun
-    const fileFilter = (req, file, cb) => filterFn(req, file, cb, imageFile)
+    const fileFilter = (req, file, cb) => {
+        filterFn(req, file, cb, imageFile)
+    }
 
     const upload = multer({
         storage,

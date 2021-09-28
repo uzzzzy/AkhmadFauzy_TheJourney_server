@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
             user.hasMany(models.journey, {
                 foreignKey: 'userId',
             })
+            user.hasMany(models.bookmark, {
+                foreignKey: 'userId',
+            })
         }
     }
     user.init(

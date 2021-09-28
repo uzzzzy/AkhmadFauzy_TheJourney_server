@@ -12,16 +12,20 @@ const router = require(`./src/v${apiVersion}/routes`)
 const cors = require('cors')
 
 // run
+app.use(
+    express.urlencoded({
+        extended: true,
+    })
+)
 
 app.use(express.json())
-
-app.use(express.urlencoded({ extended: true }))
 
 app.use(cors())
 
 app.use(`/api/v${apiVersion}`, router)
 
 app.use(express.static(__dirname + '/html'))
+
 app.use('/uploads', express.static('uploads'))
 
 app.listen(port, () => console.log(`Listening on port ${port}`))

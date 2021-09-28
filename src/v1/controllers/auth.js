@@ -102,11 +102,10 @@ exports.verifyToken = async (req, res) => {
             })
             .then((res) => {
                 let temp = res
-                temp.image = res.image ? handleImage(res.image, 'users') : 'https://www.pixsy.com/wp-content/uploads/2021/04/edi-libedinsky-1bhp9zBPHVE-unsplash-1-1024x683.jpeg'
+                temp.image = res.image ? handleImage(res.image, 'users') : 'http://localhost:5000/uploads/blankportrait.svg'
 
                 result = temp
             })
-        // else result.image = 'https://www.pixsy.com/wp-content/uploads/2021/04/edi-libedinsky-1bhp9zBPHVE-unsplash-1-1024x683.jpeg'
 
         res.send({
             status: 'succes',

@@ -1,6 +1,30 @@
 const { models, success, failed } = require('../functions/')
 
-const { bookmark: table } = models
+const { bookmark: table, journey, bookmark } = models
+
+exports.getBookmarks = async (req, res) => {
+    const { count, rows: bookmarks } = await table.findAndCountAll({
+        attributes: ['id'],
+        where: {
+            userId: req.user.id,
+        },
+        distinct: true,
+        include: {
+            model: journey,
+            attributes: {
+                exclude: ['userId', 'updatedAt'],
+            },
+            include: [
+                {
+                    model: bookmark,
+                    attributes: ['userId'],
+                },
+            ],
+        },
+    })
+
+    return success(res, { count, bookmarks })
+}
 
 exports.addBookmark = async (req, res) => {
     try {

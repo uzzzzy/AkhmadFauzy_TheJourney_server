@@ -1,6 +1,87 @@
-const { models, success, failed } = require('../functions/')
+const fs = require('fs')
+const { Op, fn, col } = require('sequelize')
 
-const { user: table, journey } = models
+const { models, handleImage, success, failed } = require('../functions/')
+
+const { user: table, journey, bookmark } = models
+
+exports.getUser = async (req, res) => {
+    try {
+        const { id } = req.params
+
+        const query = {
+            attributes: {
+                exclude: ['password', 'createdAt', 'updatedAt'],
+            },
+            include: [
+                {
+                    model: bookmark,
+                    attributes: ['journeyId'],
+                },
+                {
+                    model: journey,
+                    attributes: {
+                        exclude: ['updatedAt'],
+                    },
+                    include: {
+                        model: bookmark,
+                        attributes: ['userId'],
+                    },
+                },
+            ],
+            order: [[{ model: journey }, 'createdAt', 'DESC']],
+        }
+
+        let user
+        await table.findByPk(id, query).then((res) => {
+            let temp = res
+            temp.image = res.image ? handleImage(res.image, 'users') : 'http://localhost:5000/uploads/blankportrait.svg'
+            user = temp
+        })
+
+        return success(res, { user })
+    } catch (error) {
+        return failed(res)
+    }
+}
+
+exports.updateUser = async (req, res) => {
+    try {
+        const id = req.user.id
+        let message = 'Data Updated'
+
+        if (req.file?.filename) {
+            if (req.file?.filename)
+                await table
+                    .findByPk(id, {
+                        attributes: ['image'],
+                    })
+                    .then((item) => {
+                        console.log
+                        item.image &&
+                            fs.unlink('./uploads/users/' + item.image, (err) => {
+                                if (err) {
+                                    console.error(err)
+                                }
+                            })
+                    })
+
+            let update = {}
+
+            if (req.file?.filename) update.image = req.file.filename
+
+            await table.update(update, {
+                where: {
+                    id,
+                },
+            })
+        } else message = 'No Data Updated'
+
+        return success(res, { message })
+    } catch (error) {
+        return failed(res)
+    }
+}
 
 exports.getJourneys = async (req, res) => {
     try {
@@ -44,7 +125,6 @@ exports.getJourneys = async (req, res) => {
             })
         }
     } catch (error) {
-        console.log(error)
         return failed(res)
     }
 }

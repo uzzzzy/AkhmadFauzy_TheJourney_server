@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken')
 exports.getJourneys = async (req, res) => {
     try {
         // Get Passed Query
-        const { userId, order, limit, offset, type, search } = req.query
+        const { userId, createdAt, order, limit, offset, type, search } = req.query
         let user
         if (req.header('Authorization')) user = jwt.verify(req.header('Authorization').split(' ')[1], process.env.TOKEN_KEY)
 
@@ -41,6 +41,14 @@ exports.getJourneys = async (req, res) => {
                 ...where,
                 userId,
             }
+        if (createdAt) {
+            where = {
+                ...where,
+                createdAt: {
+                    [Op.gt]: new Date(createdAt),
+                },
+            }
+        }
         if (search)
             where = {
                 ...where,
@@ -65,7 +73,6 @@ exports.getJourneys = async (req, res) => {
             })
         }
     } catch (error) {
-        console.log(error)
         return failed(res)
     }
 }
@@ -81,7 +88,7 @@ exports.getJourney = async (req, res) => {
         include: [
             {
                 model: user,
-                attributes: ['fullName'],
+                attributes: ['id', 'fullName'],
             },
             {
                 model: bookmark,
@@ -104,11 +111,9 @@ exports.getJourney = async (req, res) => {
                 },
             }
         )
-        console.log(journey.seen)
 
         return success(res, journey)
     } catch (error) {
-        console.log(error)
         return failed(res)
     }
 }
