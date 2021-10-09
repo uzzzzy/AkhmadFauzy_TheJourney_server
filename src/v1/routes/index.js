@@ -1,12 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 
-const path = require('path')
-
 const router = express.Router()
-
-// Route Home
-router.get('/', (req, res) => res.sendFile(path.join(path.dirname(__dirname), '/html/index.html')))
 
 // Controllers
 const { login, register, verifyToken } = require('../controllers/auth')
@@ -18,6 +13,7 @@ const { getBookmarks, addBookmark, deleteBookmark } = require('../controllers/bo
 // Middlewares
 const { auth } = require('../middlewares/auth')
 const { uploadFile, updateFile } = require('../middlewares/upload')
+const { addComment } = require('../controllers/comment')
 
 // Route Auth
 router.post('/login', login)
@@ -33,14 +29,17 @@ router.get('/journeys', getJourneys)
 router.get('/journey/:id', getJourney)
 router.post('/journey', auth, addJourney)
 
+// Route Image
+router.get('/images', auth, getImages)
+router.post('/image', auth, uploadFile('image'), addImage)
+router.delete('/image', auth, deleteImage)
+
 // Route Bookmark
 router.get('/bookmarks', auth, getBookmarks)
 router.post('/bookmark', auth, addBookmark)
 router.delete('/bookmark/:id', auth, deleteBookmark)
 
-// Route Image
-router.get('/images', auth, getImages)
-router.post('/image', auth, uploadFile('image'), addImage)
-router.delete('/image', auth, deleteImage)
+// Route Comment
+router.post('/journey/:id/comment', auth, addComment)
 
 module.exports = router

@@ -28,13 +28,11 @@ const validCheck = (body, validator) => {
 }
 
 // Handle image path
-
 exports.handleImage = (image, path) => {
     return process.env.UPLOAD + `/${path}/` + image
 }
 
 // Response To Client
-
 exports.failed = (res, message, status) => {
     const responseCode = status ? status : 500
     const responseMessage = message ? message : 'Server Error'

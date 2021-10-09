@@ -1,15 +1,15 @@
 const { Op, fn, col } = require('sequelize')
 
-const { models, success, failed } = require('../functions/')
+const { models, success, failed, handleImage } = require('../functions/')
 
-const { journey: table, user, bookmark } = models
+const { journey: table, user, bookmark, comment } = models
 
 const jwt = require('jsonwebtoken')
 
 exports.getJourneys = async (req, res) => {
     try {
         // Get Passed Query
-        const { userId, createdAt, order, limit, offset, type, search } = req.query
+        const { userId, createdAt, order, limit, offset, search } = req.query
         let user
         if (req.header('Authorization')) user = jwt.verify(req.header('Authorization').split(' ')[1], process.env.TOKEN_KEY)
 
@@ -62,16 +62,11 @@ exports.getJourneys = async (req, res) => {
 
         query = { ...query, where }
 
-        if (type === 'count') {
-            const count = await table.count(query)
-            return success(res, { count })
-        } else {
-            const { count, rows } = await table.findAndCountAll(query)
-            return success(res, {
-                count: count,
-                journeys: rows,
-            })
-        }
+        const { count, rows } = await table.findAndCountAll(query)
+        return success(res, {
+            count: count,
+            journeys: rows,
+        })
     } catch (error) {
         return failed(res)
     }
@@ -94,11 +89,23 @@ exports.getJourney = async (req, res) => {
                 model: bookmark,
                 attributes: ['userId'],
             },
+            {
+                model: comment,
+                attributes: ['comment'],
+                include: {
+                    model: user,
+                    attributes: ['id', 'fullName', 'image'],
+                },
+            },
         ],
     }
 
     try {
-        const journey = await table.findByPk(id, query)
+        let journey = await table.findByPk(id, query)
+
+        journey.comments.forEach((item, i) => {
+            journey.comments[i].user.image = item.user.image ? handleImage(item.user.image, 'users') : 'http://localhost:5000/uploads/blankportrait.svg'
+        })
 
         await table.update(
             {
