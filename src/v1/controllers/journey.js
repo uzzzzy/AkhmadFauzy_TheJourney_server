@@ -68,6 +68,7 @@ exports.getJourneys = async (req, res) => {
             journeys: rows,
         })
     } catch (error) {
+        console.log(error)
         return failed(res)
     }
 }
