@@ -32,7 +32,7 @@ router.post('/journey', auth, addJourney)
 
 // Route Image
 router.get('/images', auth, getImages)
-router.post('/image', auth, uploadFile('image'), addImage)
+router.post('/image', auth, uploadFile('image'), sendImage, addImage)
 router.delete('/image', auth, deleteImage)
 
 // Route Bookmark

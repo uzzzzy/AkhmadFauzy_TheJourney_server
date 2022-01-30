@@ -30,7 +30,9 @@ exports.addImage = async (req, res) => {
         userId: req.user.id,
     })
 
-    return res.send({ link: handleImage(req.file.filename, 'images') })
+    console.log(req)
+
+    return res.send({ link: handleImage(req.cdn.url.split('/').pop(), 'images') })
 }
 
 exports.deleteImage = async (req, res) => {

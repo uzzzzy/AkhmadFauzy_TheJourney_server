@@ -29,7 +29,7 @@ const validCheck = (body, validator) => {
 
 // Handle image path
 exports.handleImage = (image, path) => {
-    return process.env.UPLOAD + image
+    return process.env.UPLOAD + `/${path}/` + image
 }
 
 // Response To Client
