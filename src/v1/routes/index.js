@@ -14,6 +14,7 @@ const { getBookmarks, addBookmark, deleteBookmark } = require('../controllers/bo
 const { auth } = require('../middlewares/auth')
 const { uploadFile, updateFile } = require('../middlewares/upload')
 const { addComment } = require('../controllers/comment')
+const { sendImage } = require('../middlewares/cloudinary')
 
 // Route Auth
 router.post('/login', login)
@@ -22,7 +23,7 @@ router.post('/verify', auth, verifyToken)
 
 // Route User
 router.get('/user/:id', getUser)
-router.patch('/user', auth, updateFile('image'), updateUser)
+router.patch('/user', auth, uploadFile('image'), sendImage, updateUser)
 
 // Route Journey
 router.get('/journeys', getJourneys)

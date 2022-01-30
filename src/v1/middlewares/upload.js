@@ -3,17 +3,6 @@ const multer = require('multer')
 const sizeInMB = 10
 const maxSize = sizeInMB * 1000 * 1000
 
-const storageFun = multer.diskStorage({
-    destination: function (req, file, cb) {
-        const path = req.url.split('/')[1]
-        cb(null, `uploads/${path}s`)
-    },
-
-    filename: function (req, file, cb) {
-        cb(null, `${Date.now()}-${file.originalname.replace(/\s/g, '')}`)
-    },
-})
-
 const filterFn = async (req, file, cb, imageFile) => {
     if (file.fieldname === imageFile) {
         if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
@@ -57,13 +46,10 @@ const resData = (req, res, next, upload, opt) => {
 }
 
 exports.uploadFile = (imageFile) => {
-    const storage = storageFun
-    const fileFilter = (req, file, cb) => {
-        filterFn(req, file, cb, imageFile)
-    }
+    const fileFilter = (req, file, cb) => filterFn(req, file, cb, imageFile)
 
     const upload = multer({
-        storage,
+        storage: multer.diskStorage({}),
         fileFilter,
         limits: {
             fileSize: maxSize,
@@ -74,11 +60,10 @@ exports.uploadFile = (imageFile) => {
 }
 
 exports.updateFile = (imageFile) => {
-    const storage = storageFun
     const fileFilter = (req, file, cb) => filterFn(req, file, cb, imageFile)
 
     const upload = multer({
-        storage,
+        storage: multer.diskStorage({}),
         fileFilter,
         limits: {
             fileSize: maxSize,

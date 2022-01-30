@@ -1,14 +1,10 @@
 {
   "development": {
-    "username": "wgvzyxbpjnbfnb",
-    "password": "df1b82d710ad5cc2a3eec9e1a63658ef5780e2b8373774e2acdae12caf11f98e",
-    "database": "dhlcn0vfvb5n6",
-    "host": "ec2-54-208-139-247.compute-1.amazonaws.com",
-    "port": 5432,
-    "dialect": "postgres",
-    "dialectOptions": {
-      "ssl": false
-    }
+    "username": "root",
+    "password": null,
+    "database": "database_journey_development",
+    "host": "localhost",
+    "dialect": "mysql"
   },
   "test": {
     "username": "wgvzyxbpjnbfnb",

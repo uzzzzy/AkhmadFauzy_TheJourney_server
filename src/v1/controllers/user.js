@@ -50,25 +50,11 @@ exports.updateUser = async (req, res) => {
         const id = req.user.id
         let message = 'Data Updated'
 
-        if (req.file?.filename) {
-            if (req.file?.filename)
-                await table
-                    .findByPk(id, {
-                        attributes: ['image'],
-                    })
-                    .then((item) => {
-                        console.log
-                        item.image &&
-                            fs.unlink('./uploads/users/' + item.image, (err) => {
-                                if (err) {
-                                    console.error(err)
-                                }
-                            })
-                    })
+        console.log(req.cdn)
 
+        if (req.cdn) {
             let update = {}
-
-            if (req.file?.filename) update.image = req.file.filename
+            if (req.cdn.url) update.image = req.cdn.url.split('/').pop()
 
             await table.update(update, {
                 where: {
@@ -79,6 +65,7 @@ exports.updateUser = async (req, res) => {
 
         return success(res, { message })
     } catch (error) {
+        console.log(error)
         return failed(res)
     }
 }

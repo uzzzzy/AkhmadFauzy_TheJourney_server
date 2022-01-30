@@ -63,6 +63,10 @@ exports.getJourneys = async (req, res) => {
         query = { ...query, where }
 
         const { count, rows } = await table.findAndCountAll(query)
+
+        rows.map((data) => {
+            data.description = data.description.replace(/192\.168\.1\.5/gim, 'localhost')
+        })
         return success(res, {
             count: count,
             journeys: rows,
@@ -107,6 +111,7 @@ exports.getJourney = async (req, res) => {
         journey.comments.forEach((item, i) => {
             journey.comments[i].user.image = item.user.image ? handleImage(item.user.image, 'users') : 'http://localhost:5000/uploads/blankportrait.svg'
         })
+        journey.description = journey.description.replace(/192\.168\.1\.5/gim, 'localhost')
 
         await table.update(
             {
