@@ -1,6 +1,8 @@
 node_modules
 html
 
+.env
+
 /uploads/images/*
 !/uploads/images/*.txt
 
