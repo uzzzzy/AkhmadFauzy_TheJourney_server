@@ -26,17 +26,16 @@ exports.getImages = async (req, res) => {
 
 exports.addImage = async (req, res) => {
     await table.create({
-        imageName: req.file.filename,
+        imageName: req.cdn.url.split('/').pop(),
         userId: req.user.id,
     })
 
-    console.log(req)
-
-    return res.send({ link: handleImage(req.cdn.url.split('/').pop(), 'images') })
+    return res.send({
+        link: handleImage(req.cdn.url.split('/').pop(), 'images'),
+    })
 }
 
 exports.deleteImage = async (req, res) => {
-    console.log(req)
     try {
         const uri = req.body.src.split('/')
 

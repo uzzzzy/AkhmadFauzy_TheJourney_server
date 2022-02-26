@@ -6,3 +6,5 @@ html
 
 /uploads/users/*
 !/uploads/users/*.txt
+
+/config/config.json

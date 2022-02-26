@@ -5,7 +5,9 @@ const maxSize = sizeInMB * 1000 * 1000
 
 const filterFn = async (req, file, cb, imageFile) => {
     if (file.fieldname === imageFile) {
-        if (!file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)) {
+        if (
+            !file.originalname.match(/\.(jpg|JPG|jpeg|JPEG|png|PNG|gif|GIF)$/)
+        ) {
             req.fileValidationError = {
                 message: 'Only image files are accepted',
             }

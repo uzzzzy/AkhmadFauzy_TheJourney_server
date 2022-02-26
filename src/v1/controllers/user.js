@@ -35,7 +35,9 @@ exports.getUser = async (req, res) => {
         let user
         await table.findByPk(id, query).then((res) => {
             let temp = res
-            temp.image = res.image ? handleImage(res.image, 'users') : 'http://localhost:5000/uploads/blankportrait.svg'
+            temp.image = res.image
+                ? handleImage(res.image, 'users')
+                : 'http://localhost:5000/uploads/blankportrait.svg'
             user = temp
         })
 
@@ -49,8 +51,6 @@ exports.updateUser = async (req, res) => {
     try {
         const id = req.user.id
         let message = 'Data Updated'
-
-        console.log(req.cdn)
 
         if (req.cdn) {
             let update = {}
